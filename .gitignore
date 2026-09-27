@@ -1,0 +1,6 @@
+# Generated index/runtime artifacts (rebuild with `qlever index`)
+iisg.*
+
+# Hardlinks to each pipeline repo's own derived/ output -- not source,
+# see README for how these get populated
+sources/

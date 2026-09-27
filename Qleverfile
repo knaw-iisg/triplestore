@@ -1,0 +1,37 @@
+# QLever config for the IISG knowledge graph: the output of five ETL
+# pipelines, each loaded into its own named graph so provenance is kept,
+# with SPARQL queries free to union them (see queries/).
+#
+#   qlever index    # build the index from sources/ (gitignored -- hardlinks
+#                    # to each pipeline repo's own derived/ output, see README)
+#   qlever start    # serve it
+#   qlever stop
+
+[data]
+NAME        = iisg
+DESCRIPTION = IISG knowledge graph: biblio-etl, archive-etl, findingaid-etl, authorities-etl, dataverse-etl outputs, each in its own named graph
+
+[index]
+INPUT_FILES      = sources/*
+MULTI_INPUT_JSON = [
+    {"cmd": "cat sources/biblio.nt",       "format": "ttl", "graph": "https://iisg.amsterdam/graph/biblio"},
+    {"cmd": "cat sources/archive.nt",      "format": "ttl", "graph": "https://iisg.amsterdam/graph/archive"},
+    {"cmd": "cat sources/findingaid.nt",   "format": "ttl", "graph": "https://iisg.amsterdam/graph/findingaid"},
+    {"cmd": "cat sources/authorities.nt",  "format": "ttl", "graph": "https://iisg.amsterdam/graph/authority"},
+    {"cmd": "cat sources/dataverse.ttl",   "format": "ttl", "graph": "https://iisg.amsterdam/graph/dataverse"}
+    ]
+SETTINGS_JSON    = { "num-triples-per-batch": 1000000 }
+
+[server]
+PORT               = 7878
+ACCESS_TOKEN       = iisg
+MEMORY_FOR_QUERIES = 4G
+CACHE_MAX_SIZE     = 2G
+
+[runtime]
+SYSTEM = docker
+IMAGE  = docker.io/adfreiburg/qlever:latest
+
+[ui]
+UI_PORT   = 7876
+UI_CONFIG = default

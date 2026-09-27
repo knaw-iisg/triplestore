@@ -1,0 +1,5 @@
+# Sanity check: one row per pipeline's named graph, with its triple count.
+# Confirms all five loaded and roughly matches each repo's derived/ output.
+SELECT ?g (COUNT(*) AS ?triples) WHERE {
+  GRAPH ?g { ?s ?p ?o }
+} GROUP BY ?g ORDER BY DESC(?triples)

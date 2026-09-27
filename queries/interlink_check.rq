@@ -1,0 +1,21 @@
+# Interlink verification: authorities-etl mints IRIs under the exact same
+# person:/organization:/place:/topic:/period:/form:/title:/event:
+# namespaces that biblio-etl and archive-etl reference but leave nameless.
+# This lists every authority-namespace IRI that has triples in BOTH the
+# authority graph AND at least one of biblio/archive/findingaid's graphs --
+# i.e., the interlinking actually connected something, not just two
+# disjoint sets of IRIs that happen to share a URI prefix.
+#
+# Substitute a specific IRI (e.g. from graph_counts.rq's results, or
+# https://iisg.amsterdam/authority/form/3248) into a plain
+# `SELECT ?g ?p ?o WHERE { GRAPH ?g { <IRI> ?p ?o } }` to see one entity's
+# merged properties across pipelines, as done for real during development
+# (see triplestore repo commit history / session notes).
+
+PREFIX sdo: <http://schema.org/>
+
+SELECT (COUNT(DISTINCT ?iri) AS ?interlinked_authority_iris) WHERE {
+  GRAPH <https://iisg.amsterdam/graph/authority> { ?iri a ?authorityType }
+  GRAPH ?otherGraph { ?iri ?p ?o }
+  FILTER(?otherGraph != <https://iisg.amsterdam/graph/authority>)
+}
