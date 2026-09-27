@@ -56,18 +56,22 @@ Everything's in `Qleverfile` -- port, memory limits, cache size, which files
 load into which graph. Re-run `qlever index` after changing `[index]`
 settings, or just `qlever stop && qlever start` for `[server]` settings.
 
-## Interlink verification results (2026-09-27/28 full harvest)
+## Interlink verification results (2026-09-28 full harvest, post-fix)
 
-- **588,184** distinct `person:`/`organization:`/`place:`/`topic:`/`period:`/
+Graph sizes: biblio 18,353,945 · findingaid 4,483,744 · authority 2,506,569 ·
+dataverse 306,293 · archive 146,603 (25.8M unique triples total).
+
+- **588,435** distinct `person:`/`organization:`/`place:`/`topic:`/`period:`/
   `form:`/`title:`/`event:` IRIs have data in *both* the `authority` graph
   and at least one of biblio/archive/findingaid's graphs -- confirming
   authorities-etl actually populates the names/`sameAs` that the other three
   pipelines mint but leave bare (`queries/interlink_check.rq`).
-- archive-etl and findingaid-etl deliberately mint the same `collection:<id>`
-  IRI for a given archive's flat MARC record vs. its full EAD component
-  hierarchy; spot-checked on `collection:ARCH00018` (30 triples from
-  archive-etl, 46 from findingaid-etl, same subject) via
-  `queries/collection_interlink_check.rq`.
+- **5,536** `collection:<id>` IRIs have data in *both* archive-etl's graph
+  and findingaid-etl's graph (`queries/collection_interlink_check.rq`) --
+  archive-etl's flat MARC record and findingaid-etl's full EAD component
+  hierarchy for the same archive, deliberately sharing one IRI. Spot-checked
+  on `collection:ARCH00018` (30 triples from archive-etl, 46 from
+  findingaid-etl, same subject).
 
 ## A real bug this setup caught
 
@@ -75,8 +79,15 @@ Loading the *actual full-harvest output* (not just small fixture samples)
 surfaced a bug neither biblio-etl's nor archive-etl's own test suites
 caught: `GRAPH ?g { ?s a ?type }` on the archive graph returned only one
 result (`dataset:archive a sdo:Dataset`) -- every archive record was
-missing its own `rdf:type` entirely. Root cause and fix: see those repos'
-`context.py`/`pipeline.py` commit history (`text_content()`). Left as a
-lesson here too: fixture-only testing can't catch a fixture that doesn't
-match what the real pipeline actually produces -- querying the real,
-merged, full-scale output is what caught it.
+missing its own `rdf:type` entirely (and the collection-interlink count
+above was 0, not 5,536, until this was fixed -- that query specifically
+needs both graphs' `rdf:type`, so it's a clean before/after signal). Root
+cause and fix: see biblio-etl/archive-etl commit history (`text_content()`
+in `context.py`) -- MARC's `<leader>` element has no XML attributes, so it
+collapses to a plain string via `xmltodict` rather than `{"$text": ...}`,
+and both repos' *own test fixtures* (inherited pre-converted, not produced
+by their own `harvest.py`) happened to always use the dict shape, masking
+it. Lesson: fixture-only testing can't catch a fixture that doesn't match
+what the real pipeline actually produces -- querying the real, merged,
+full-scale output is what caught it. Both repos were re-harvested in full
+after the fix; the numbers above are post-fix.
