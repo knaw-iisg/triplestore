@@ -1,4 +1,4 @@
-# QLever config for the IISG knowledge graph: the output of five ETL
+# QLever config for the IISG knowledge graph: the output of six ETL
 # pipelines, each loaded into its own named graph so provenance is kept,
 # with SPARQL queries free to union them (see queries/).
 #
@@ -9,7 +9,7 @@
 
 [data]
 NAME        = iisg
-DESCRIPTION = IISG knowledge graph: biblio-etl, archive-etl, findingaid-etl, authorities-etl, dataverse-etl outputs, each in its own named graph
+DESCRIPTION = IISG knowledge graph: biblio-etl, archive-etl, findingaid-etl, authorities-etl, dataverse-etl, orcid-etl outputs, each in its own named graph
 
 [index]
 INPUT_FILES      = sources/*
@@ -18,7 +18,8 @@ MULTI_INPUT_JSON = [
     {"cmd": "cat sources/archive.nt",      "format": "ttl", "graph": "https://iisg.amsterdam/graph/archive"},
     {"cmd": "cat sources/findingaid.nt",   "format": "ttl", "graph": "https://iisg.amsterdam/graph/findingaid"},
     {"cmd": "cat sources/authorities.nt",  "format": "ttl", "graph": "https://iisg.amsterdam/graph/authority"},
-    {"cmd": "cat sources/dataverse.ttl",   "format": "ttl", "graph": "https://iisg.amsterdam/graph/dataverse"}
+    {"cmd": "cat sources/dataverse.ttl",   "format": "ttl", "graph": "https://iisg.amsterdam/graph/dataverse"},
+    {"cmd": "cat sources/orcid.ttl",       "format": "ttl", "graph": "https://iisg.amsterdam/graph/orcid"}
     ]
 SETTINGS_JSON    = { "num-triples-per-batch": 1000000 }
 
