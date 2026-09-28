@@ -3,7 +3,7 @@
 # full nested EAD component hierarchy for the same archive's top-level record).
 # Counts how many collection:<id> IRIs actually have data from both.
 
-PREFIX sdo: <http://schema.org/>
+PREFIX sdo: <https://schema.org/>
 
 SELECT (COUNT(DISTINCT ?iri) AS ?shared_collection_iris) WHERE {
   GRAPH <https://iisg.amsterdam/graph/archive> { ?iri a sdo:ArchiveComponent }

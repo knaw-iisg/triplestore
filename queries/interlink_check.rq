@@ -12,7 +12,7 @@
 # merged properties across pipelines, as done for real during development
 # (see triplestore repo commit history / session notes).
 
-PREFIX sdo: <http://schema.org/>
+PREFIX sdo: <https://schema.org/>
 
 SELECT (COUNT(DISTINCT ?iri) AS ?interlinked_authority_iris) WHERE {
   GRAPH <https://iisg.amsterdam/graph/authority> { ?iri a ?authorityType }

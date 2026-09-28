@@ -112,3 +112,19 @@ it. Lesson: fixture-only testing can't catch a fixture that doesn't match
 what the real pipeline actually produces -- querying the real, merged,
 full-scale output is what caught it. Both repos were re-harvested in full
 after the fix; the numbers above are post-fix.
+
+A second one, caught while building [iisg-kb-viewer](https://github.com/knaw-iisg/iisg-kb-viewer):
+biblio-etl, archive-etl, findingaid-etl and authorities-etl all minted
+`sdo:` as `http://schema.org/`; dataverse-etl (and now orcid-etl) use
+`https://schema.org/`. [SCHEMA-AP-NDE requires the latter](https://docs.nde.nl/schema-profile/)
+("publishers MUST use the `https://schema.org/` namespace for newly
+published datasets"), so the four were the non-compliant ones, not the
+outliers. Fixed in all four (biblio-etl#9, archive-etl#8,
+findingaid-etl#6, authorities-etl#3) and in `queries/*.rq` here; the
+existing `derived/*.nt` for all four were fixed in place (a plain
+`<http://schema.org/` -> `<https://schema.org/` rewrite, not a re-harvest
+-- the namespace string was the only thing that changed) rather than
+re-run from scratch. The interlink numbers above are unchanged by this,
+confirming the rewrite was a pure relabeling with no semantic effect --
+but the fix does mean a merged query no longer needs to treat both
+schemes as equivalent to find everything.
