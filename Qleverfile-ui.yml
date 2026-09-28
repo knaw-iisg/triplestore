@@ -3,7 +3,7 @@ config:
     name: Default
     slug: default
     sortKey: 1
-    baseUrl: http://rawdn:7878
+    baseUrl: http://localhost:7878
     apiToken: ''
     isDefault: true
     isNoSlugMode: 'False'

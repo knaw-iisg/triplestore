@@ -34,7 +34,7 @@ ln ../authorities-etl/derived/authorities.nt sources/authorities.nt
 ln ../dataverse-etl/data/derived/knaw-huc/knaw-huc-dataverse.ttl sources/dataverse.ttl
 ```
 
-Then, with the `qlever` CLI (`pip install qlever`) and Docker:
+Then, with Docker and the `qlever` CLI (`pip install -r requirements.txt`):
 
 ```bash
 qlever index   # ~1 minute for the full ~24.5M-triple corpus
@@ -48,7 +48,18 @@ qlever stop
 curl http://localhost:7878 --data-urlencode "query=$(cat queries/graph_counts.rq)" -H "Accept: text/csv"
 ```
 
-Or use the QLever UI (`qlever ui`) for an interactive query editor.
+Or `qlever ui` for an interactive, autocompleting query editor at
+http://localhost:7876/default -- its config (`Qleverfile-ui.yml`, tracked
+in git like `Qleverfile`) points `baseUrl` at `http://localhost:7878`
+deliberately: that value is read by the UI's own browser-side JavaScript,
+not resolved inside a container, so it needs to be reachable from whatever
+machine's browser is looking at the page -- `localhost` is the portable
+choice for "the same machine that's running the containers", which is the
+only setup this repo assumes. (An earlier version of this file had the
+*indexing* machine's own hostname baked in instead, which happened to
+still resolve for its author via their own `/etc/hosts` but breaks for
+anyone else -- verified by loading the page in a real browser and running
+a query end-to-end before fixing it.)
 
 ## Tweaking settings
 
