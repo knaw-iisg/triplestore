@@ -1,7 +1,7 @@
 # triplestore
 
 A [QLever](https://github.com/ad-freiburg/qlever) SPARQL store loading the
-output of all six IISG ETL pipelines, each into its own named graph, to
+output of all seven IISG ETL pipelines, each into its own named graph, to
 verify (and let you query) how they interlink:
 
 | Graph | From |
@@ -12,6 +12,7 @@ verify (and let you query) how they interlink:
 | `https://iisg.amsterdam/graph/authority` | [authorities-etl](https://github.com/knaw-iisg/authorities-etl) |
 | `https://iisg.amsterdam/graph/dataverse` | [dataverse-etl](https://github.com/knaw-iisg/dataverse-etl) |
 | `https://iisg.amsterdam/graph/orcid` | [orcid-etl](https://github.com/knaw-iisg/orcid-etl) |
+| `https://iisg.amsterdam/graph/events` | [events-etl](https://github.com/knaw-iisg/events-etl) |
 
 **Why named graphs, not one merged graph:** keeps provenance (which pipeline
 asserted what) while still letting any query union across them with
@@ -33,6 +34,7 @@ ln ../archive-etl/derived/archive.nt sources/archive.nt
 ln ../findingaid-etl/derived/findingaid.nt sources/findingaid.nt
 ln ../authorities-etl/derived/authorities.nt sources/authorities.nt
 ln ../dataverse-etl/data/derived/knaw-huc/knaw-huc-dataverse.ttl sources/dataverse.ttl
+ln ../events-etl/derived/events.ttl sources/events.ttl
 ```
 
 `orcid-etl` is the one exception: its output is personally-identifying (real
