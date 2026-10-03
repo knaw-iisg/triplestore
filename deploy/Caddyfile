@@ -1,0 +1,49 @@
+# Reverse proxy + automatic HTTPS (Let's Encrypt) for the public IISG
+# knowledge graph services. Caddy gets real certs for these automatically
+# the moment DNS for both names resolves to this box -- no cert config needed.
+#
+# Install: /etc/caddy/Caddyfile on the VPS, then `systemctl reload caddy`.
+
+sparql.zijdeman.nl {
+	# QLever itself (bound to localhost only -- see deploy/README.md).
+	# QLever already sends Access-Control-Allow-Origin: * on every response,
+	# so the viewer's browser-side JS can query this cross-origin from
+	# kb.zijdeman.nl with no extra CORS config here.
+	reverse_proxy localhost:7878
+}
+
+kb.zijdeman.nl {
+	# The viewer's endpoint default is a URL query param (static/index.html),
+	# not something baked into the app -- so point it at the public SPARQL
+	# endpoint here instead of patching app code. The @bare matcher only
+	# fires when there's no query string yet -- without it, redir matches on
+	# path alone, so the redirect's own target (still path "/") would match
+	# again and loop forever (caught this the hard way: curl silently gave
+	# up after 50 redirects and returned nothing).
+	@bare {
+		path /
+		expression {http.request.uri.query} == ""
+	}
+	redir @bare /?endpoint=https://sparql.zijdeman.nl
+	reverse_proxy localhost:5000
+}
+
+kg.zijdeman.nl {
+	# QLever's own built-in query UI (generic autocomplete SPARQL builder,
+	# `qlever ui` -- distinct from the custom iisg-kb-viewer at kb.*).
+	# Its Qleverfile-ui.yml baseUrl points at sparql.zijdeman.nl, since this
+	# page's JS runs in each visitor's own browser, not on this VPS.
+	#
+	# The bare root path ignores our backend's `isDefault=True` flag (ships
+	# with Wikidata hardcoded as default via its own example fixtures,
+	# confirmed via `manage.py shell` -- our backend IS correctly flagged
+	# isDefault, restarting the container didn't change root's behavior
+	# either, so this is the frontend's own root-route logic, not a cache).
+	# Forcing the path is the reliable fix, same pattern as kb.zijdeman.nl.
+	@bare {
+		path /
+		expression {http.request.uri.query} == ""
+	}
+	redir @bare /iisg-kg
+	reverse_proxy localhost:7876
+}
