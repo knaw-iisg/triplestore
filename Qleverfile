@@ -36,4 +36,4 @@ IMAGE  = docker.io/adfreiburg/qlever:latest
 
 [ui]
 UI_PORT   = 7876
-UI_CONFIG = default
+UI_CONFIG = iisg-kg

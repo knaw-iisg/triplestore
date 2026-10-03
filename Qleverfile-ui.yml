@@ -1,7 +1,7 @@
 config:
   backend:
-    name: Default
-    slug: default
+    name: iisg-kg
+    slug: iisg-kg
     sortKey: 1
     baseUrl: http://localhost:7878
     apiToken: ''
@@ -137,8 +137,36 @@ config:
     suggestedPrefixes: |-
       @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
       @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+      @prefix owl: <http://www.w3.org/2002/07/owl#> .
       @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
       @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+      @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+      @prefix dcterms: <http://purl.org/dc/terms/> .
+      @prefix dcmitype: <http://purl.org/dc/dcmitype/> .
+      @prefix sdo: <https://schema.org/> .
+      @prefix iisgv: <https://iisg.amsterdam/vocab/> .
+      @prefix marc: <https://iisg.amsterdam/marc/> .
+      @prefix person: <https://iisg.amsterdam/authority/person/> .
+      @prefix organization: <https://iisg.amsterdam/authority/organization/> .
+      @prefix place: <https://iisg.amsterdam/authority/place/> .
+      @prefix topic: <https://iisg.amsterdam/authority/topic/> .
+      @prefix period: <https://iisg.amsterdam/authority/period/> .
+      @prefix form: <https://iisg.amsterdam/authority/form/> .
+      @prefix title: <https://iisg.amsterdam/authority/title/> .
+      @prefix event: <https://iisg.amsterdam/authority/event/> .
+      @prefix item: <https://iisg.amsterdam/id/item/> .
+      @prefix dataset: <https://iisg.amsterdam/id/dataset/> .
+      @prefix collection: <https://iisg.amsterdam/id/collection/> .
+      @prefix calEvent: <https://iisg.amsterdam/id/event/> .
+      @prefix venue: <https://iisg.amsterdam/id/place/> .
+      @prefix iisg-relator: <https://iisg.amsterdam/relators/> .
+      @prefix relator: <http://id.loc.gov/vocabulary/relators/> .
+      @prefix iso6392: <http://id.loc.gov/vocabulary/iso639-2/> .
+      @prefix lexvo: <http://lexvo.org/id/iso639-3/> .
+      @prefix rico: <https://www.ica.org/standards/RiC/ontology#> .
+      @prefix discovery: <http://rdf-vocabulary.ddialliance.org/discovery#> .
+      @prefix tgraph: <https://triplydb.com/graph/> .
+      @prefix skolem: <https://triplydb.com/.well-known/genid/> .
     suggestionEntityVariable: ?qleverui_entity
     suggestionNameVariable: ?qleverui_name
     suggestionAltNameVariable: ?qleverui_alias
