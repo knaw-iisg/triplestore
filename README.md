@@ -19,6 +19,17 @@ asserted what) while still letting any query union across them with
 `GRAPH ?g { ... }` or by naming specific graphs. See `queries/` for examples,
 including the actual interlink verification queries run during development.
 
+## Public instance
+
+This store is also deployed publicly: **https://sparql.zijdeman.nl** (raw
+SPARQL endpoint), browsable via
+[iisg-kb-viewer](https://github.com/knaw-iisg/iisg-kb-viewer) at
+**https://kb.zijdeman.nl**, or via QLever's own query UI at
+**https://kg.zijdeman.nl**. Full deployment walkthrough and all config
+(Caddy, systemd, firewall) are in [`deploy/`](deploy/) -- reproducible from
+a fresh VPS by following [`deploy/README.md`](deploy/README.md) top to
+bottom.
+
 ## Setup
 
 This repo holds only the **settings** (`Qleverfile`) and **tracked queries**
