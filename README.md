@@ -1,7 +1,7 @@
 # triplestore
 
 A [QLever](https://github.com/ad-freiburg/qlever) SPARQL store loading the
-output of all seven IISG ETL pipelines, each into its own named graph, to
+output of all eight IISG ETL pipelines, each into its own named graph, to
 verify (and let you query) how they interlink:
 
 | Graph | From |
@@ -13,6 +13,7 @@ verify (and let you query) how they interlink:
 | `https://iisg.amsterdam/graph/dataverse` | [dataverse-etl](https://github.com/knaw-iisg/dataverse-etl) |
 | `https://iisg.amsterdam/graph/orcid` | [orcid-etl](https://github.com/knaw-iisg/orcid-etl) |
 | `https://iisg.amsterdam/graph/events` | [events-etl](https://github.com/knaw-iisg/events-etl) |
+| `https://iisg.amsterdam/graph/identity` | [identity-etl](https://github.com/knaw-iisg/identity-etl) |
 
 **Why named graphs, not one merged graph:** keeps provenance (which pipeline
 asserted what) while still letting any query union across them with
@@ -48,13 +49,15 @@ ln ../dataverse-etl/data/derived/knaw-huc/knaw-huc-dataverse.ttl sources/dataver
 ln ../events-etl/derived/events.ttl sources/events.ttl
 ```
 
-`orcid-etl` is the one exception: its output is personally-identifying (real
-colleagues' employment/works/funding data) and deliberately never lives
-inside that repo at all -- generate it straight into place instead of
-hardlinking:
+`orcid-etl` and `identity-etl` are the exceptions: their curation data is
+personally-identifying (real colleagues' employment/works/funding data;
+the identifier crosswalk's `identities.yaml`) and deliberately never lives
+inside either repo at all -- generate their output straight into place
+instead of hardlinking:
 
 ```bash
 cd ../orcid-etl && python3 -m orcid_etl.cli --out ../triplestore/sources/orcid.ttl
+cd ../identity-etl && python3 -m identity_etl.cli --out ../triplestore/sources/identity.ttl
 ```
 
 Then, with Docker and the `qlever` CLI (`pip install -r requirements.txt`):

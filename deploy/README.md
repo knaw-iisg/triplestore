@@ -178,7 +178,27 @@ queries successfully -- same thing you'd check locally at
 
 ## Keeping it updated later
 
-When any of the seven ETL pipelines produces new output: rebuild the index
-locally as usual (`qlever index`), then repeat step 2's rsync and run
-`qlever stop && qlever start` on the VPS (no `index` step needed there --
-you're shipping an already-built index, not rebuilding on the VPS).
+**Automatically**: `nightly-harvest.{sh,service,timer}` run the full harvest
+-- pull latest pipeline code, re-run all eight pipelines, re-index, restart
+QLever -- as the `silk` user, nightly at 3am (`+/- 5min RandomizedDelaySec`).
+Installed once via:
+
+```bash
+cp deploy/nightly-harvest.* /etc/systemd/system/   # service + timer only; .sh stays under ~/triplestore/deploy
+cp deploy/nightly-harvest.sh ~/triplestore/deploy/
+systemctl daemon-reload
+systemctl enable --now nightly-harvest.timer
+```
+
+Each pipeline needs its own sibling checkout under `~/pipelines/<repo>`
+with its own `.venv` already set up (same as a local dev checkout), plus
+-- for `orcid-etl` and `identity-etl` -- their personally-identifying
+`--data-dir` populated (`~/orcid-etl-data/colleagues.yaml`,
+`~/identity-etl-data/identities.yaml`) since those never live inside the
+repo itself. Logs append to `~/triplestore/nightly-harvest.log`.
+
+**Manually**, for an immediate push without waiting for 3am: when any
+pipeline produces new output, rebuild the index locally as usual (`qlever
+index`), then repeat step 2's rsync and run `qlever stop && qlever start`
+on the VPS (no `index` step needed there -- you're shipping an
+already-built index, not rebuilding on the VPS).

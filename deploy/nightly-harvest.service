@@ -1,0 +1,9 @@
+[Unit]
+Description=Nightly IISG knowledge graph harvest + re-index
+After=network-online.target docker.service
+
+[Service]
+Type=oneshot
+User=silk
+ExecStart=/home/silk/triplestore/deploy/nightly-harvest.sh
+TimeoutStartSec=4h
