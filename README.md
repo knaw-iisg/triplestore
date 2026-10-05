@@ -45,19 +45,22 @@ ln ../biblio-etl/derived/biblio.nt sources/biblio.nt
 ln ../archive-etl/derived/archive.nt sources/archive.nt
 ln ../findingaid-etl/derived/findingaid.nt sources/findingaid.nt
 ln ../authorities-etl/derived/authorities.nt sources/authorities.nt
-ln ../dataverse-etl/data/derived/knaw-huc/knaw-huc-dataverse.ttl sources/dataverse.ttl
-ln ../events-etl/derived/events.ttl sources/events.ttl
 ```
 
-`orcid-etl` and `identity-etl` are the exceptions: their curation data is
+`dataverse-etl`, `events-etl`, `orcid-etl` and `identity-etl` are the
+exceptions -- each only writes Turtle itself (no N-Triples option of its
+own), and `orcid-etl`/`identity-etl`'s curation data is also
 personally-identifying (real colleagues' employment/works/funding data;
 the identifier crosswalk's `identities.yaml`) and deliberately never lives
-inside either repo at all -- generate their output straight into place
-instead of hardlinking:
+inside either repo at all. Rather than hardlinking raw Turtle, run all four
+through [iisg-kg-etl](https://github.com/knaw-iisg/iisg-kg-etl)'s
+`run_pipelines.py`, which converts each to N-Triples right after (via that
+pipeline's own venv's already-installed `rdflib`) so every file in
+`sources/` ends up in the same format:
 
 ```bash
-cd ../orcid-etl && python3 -m orcid_etl.cli --out ../triplestore/sources/orcid.ttl
-cd ../identity-etl && python3 -m identity_etl.cli --out ../triplestore/sources/identity.ttl
+python3 ../iisg-kg-etl/run_pipelines.py --pipelines-root .. --output-dir sources \
+  --only dataverse,events,orcid,identity
 ```
 
 Then, with Docker and the `qlever` CLI (`pip install -r requirements.txt`):
