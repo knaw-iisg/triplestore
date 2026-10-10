@@ -185,7 +185,7 @@ Installed once via:
 
 ```bash
 cp deploy/nightly-harvest.* /etc/systemd/system/   # service + timer only; .sh stays under ~/triplestore/deploy
-cp deploy/nightly-harvest.sh ~/triplestore/deploy/
+cp deploy/nightly-harvest.sh deploy/record_run_history.py ~/triplestore/deploy/
 systemctl daemon-reload
 systemctl enable --now nightly-harvest.timer
 ```
@@ -196,6 +196,20 @@ with its own `.venv` already set up (same as a local dev checkout), plus
 `--data-dir` populated (`~/orcid-etl-data/colleagues.yaml`,
 `~/identity-etl-data/identities.yaml`) since those never live inside the
 repo itself. Logs append to `~/triplestore/nightly-harvest.log`.
+
+Each run also appends one structured JSON line (timing, per-pipeline
+ok/failed status, the resulting per-graph triple/subject/predicate/object
+counts, and the authority-interlinking count) to
+`~/triplestore/run-history.jsonl`,
+which `iisg-kb-viewer`'s "Data science" and "Growth" views read across
+the `silk`/`kbviewer` user boundary -- `nightly-harvest.sh` `chmod 644`s
+it after every run, but double check that `~/triplestore` itself (and
+`~/`) stay `o+x` on the VPS, or `kbviewer` won't be able to traverse down
+to the file even though the file itself is world-readable. If you update
+`nightly-harvest.sh` later and it references a new script (like
+`record_run_history.py`), remember to `cp` that file into
+`~/triplestore/deploy/` too -- only `nightly-harvest.sh` itself is named
+in the step above.
 
 **Manually**, for an immediate push without waiting for 3am: when any
 pipeline produces new output, rebuild the index locally as usual (`qlever

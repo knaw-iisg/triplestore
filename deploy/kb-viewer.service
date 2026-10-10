@@ -8,6 +8,7 @@ User=kbviewer
 Group=kbviewer
 WorkingDirectory=/opt/iisg-kb-viewer
 Environment=PORT=5000
+Environment=RUN_HISTORY_PATH=/home/silk/triplestore/run-history.jsonl
 ExecStart=/opt/iisg-kb-viewer/.venv/bin/gunicorn -w 2 -b 127.0.0.1:5000 iisgBrowser:app
 Restart=on-failure
 RestartSec=5

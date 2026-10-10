@@ -4,3 +4,10 @@ iisg.*
 # Hardlinks to each pipeline repo's own derived/ output -- not source,
 # see README for how these get populated
 sources/
+
+# Nightly-harvest runtime output -- run-history.jsonl accumulates on the
+# VPS across runs and is read by iisg-kb-viewer; the .tmp.json files are
+# transient per-run scratch files nightly-harvest.sh deletes when it's done
+nightly-harvest.log
+run-history.jsonl
+*.tmp.json
