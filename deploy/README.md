@@ -179,7 +179,7 @@ queries successfully -- same thing you'd check locally at
 ## Keeping it updated later
 
 **Automatically**: `nightly-harvest.{sh,service,timer}` run the full harvest
--- pull latest pipeline code, re-run all eight pipelines, re-index, restart
+-- pull latest pipeline code, re-run all nine pipelines, re-index, restart
 QLever -- as the `silk` user, nightly at 3am (`+/- 5min RandomizedDelaySec`).
 Installed once via:
 

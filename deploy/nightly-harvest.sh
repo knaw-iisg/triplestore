@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Nightly: pull the latest of all 8 ETL pipelines + the orchestrator, run
+# Nightly: pull the latest of all 9 ETL pipelines + the orchestrator, run
 # them, drop the output straight into this repo's sources/, re-index QLever,
 # and restart it. Runs as the `silk` user via nightly-harvest.timer.
 #
@@ -18,7 +18,7 @@ TRIPLESTORE="$HOME/triplestore"
 LOG="$TRIPLESTORE/nightly-harvest.log"
 RUN_HISTORY="$TRIPLESTORE/run-history.jsonl"
 SPARQL_ENDPOINT="http://localhost:7878"
-PIPELINE_REPOS="biblio-etl archive-etl findingaid-etl authorities-etl events-etl orcid-etl dataverse-etl identity-etl iisg-kg-etl"
+PIPELINE_REPOS="biblio-etl archive-etl findingaid-etl iisg-iiif authorities-etl events-etl orcid-etl dataverse-etl identity-etl iisg-kg-etl"
 
 {
   echo "=== nightly harvest started $(date -Is) ==="
@@ -31,12 +31,12 @@ PIPELINE_REPOS="biblio-etl archive-etl findingaid-etl authorities-etl events-etl
   done
 
   echo "--- refreshing dependencies ---"
-  for repo in biblio-etl archive-etl findingaid-etl authorities-etl events-etl orcid-etl identity-etl; do
+  for repo in biblio-etl archive-etl findingaid-etl iisg-iiif authorities-etl events-etl orcid-etl identity-etl; do
     "$PIPELINES_ROOT/$repo/.venv/bin/pip" install -q -e "$PIPELINES_ROOT/$repo[test]"
   done
   "$PIPELINES_ROOT/dataverse-etl/.venv/bin/pip" install -q -r "$PIPELINES_ROOT/dataverse-etl/requirements.txt"
 
-  echo "--- running all 8 pipelines ---"
+  echo "--- running all 9 pipelines ---"
   SUMMARY_JSON="$TRIPLESTORE/run-summary.tmp.json"
   python3 "$PIPELINES_ROOT/iisg-kg-etl/run_pipelines.py" \
     --pipelines-root "$PIPELINES_ROOT" \

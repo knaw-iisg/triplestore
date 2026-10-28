@@ -1,7 +1,7 @@
 # triplestore
 
 A [QLever](https://github.com/ad-freiburg/qlever) SPARQL store loading the
-output of all eight IISG ETL pipelines, each into its own named graph, to
+output of all nine IISG ETL pipelines, each into its own named graph, to
 verify (and let you query) how they interlink:
 
 | Graph | From |
@@ -9,6 +9,7 @@ verify (and let you query) how they interlink:
 | `https://iisg.amsterdam/graph/biblio` | [biblio-etl](https://github.com/knaw-iisg/biblio-etl) |
 | `https://iisg.amsterdam/graph/archive` | [archive-etl](https://github.com/knaw-iisg/archive-etl) |
 | `https://iisg.amsterdam/graph/findingaid` | [findingaid-etl](https://github.com/knaw-iisg/findingaid-etl) |
+| `https://iisg.amsterdam/graph/iiif` | [iisg-iiif](https://github.com/knaw-iisg/iisg-iiif) |
 | `https://iisg.amsterdam/graph/authority` | [authorities-etl](https://github.com/knaw-iisg/authorities-etl) |
 | `https://iisg.amsterdam/graph/dataverse` | [dataverse-etl](https://github.com/knaw-iisg/dataverse-etl) |
 | `https://iisg.amsterdam/graph/orcid` | [orcid-etl](https://github.com/knaw-iisg/orcid-etl) |
@@ -44,6 +45,7 @@ mkdir -p sources
 ln ../biblio-etl/derived/biblio.nt sources/biblio.nt
 ln ../archive-etl/derived/archive.nt sources/archive.nt
 ln ../findingaid-etl/derived/findingaid.nt sources/findingaid.nt
+ln ../iisg-iiif/data/iiif.nt sources/iiif.nt
 ln ../authorities-etl/derived/authorities.nt sources/authorities.nt
 ```
 
