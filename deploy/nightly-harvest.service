@@ -6,4 +6,4 @@ After=network-online.target docker.service
 Type=oneshot
 User=silk
 ExecStart=/home/silk/triplestore/deploy/nightly-harvest.sh
-TimeoutStartSec=4h
+TimeoutStartSec=6h
